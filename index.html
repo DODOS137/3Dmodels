@@ -7,7 +7,7 @@
     <style>
       body {
         margin: 0;
-        background: black;
+        background: #0000ff; /* Changed from black to blue */
         overflow: hidden;
       }
       canvas {
@@ -22,7 +22,7 @@
       import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/controls/OrbitControls.js';
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x000000);
+      scene.background = new THREE.Color(0x0000ff); // Changed from black to blue
 
       const camera = new THREE.PerspectiveCamera(
         60,
@@ -93,4 +93,3 @@
     </script>
   </body>
 </html>
-
