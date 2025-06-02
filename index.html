@@ -46,10 +46,12 @@
 
       const loader = new GLTFLoader();
       loader.load(
-        'models/Rx056.glb',
+        'https://dodos137.github.io/3Dmodels./models/Rx056.glb',
         function (gltf) {
           const model = gltf.scene;
           model.scale.set(1.5, 1.5, 1.5);
+          model.position.set(0, 0, 0);
+          model.rotation.y = Math.PI;
           scene.add(model);
         },
         undefined,
