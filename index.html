@@ -2,17 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Robot Viewer</title>
+    <title>Test GLB Load</title>
     <style>
-      body {
-        margin: 0;
-        background: #0000ff; /* 파란 배경 */
-        overflow: hidden;
-      }
-      canvas {
-        display: block;
-      }
+      body { margin: 0; background: blue; overflow: hidden; }
+      canvas { display: block; }
     </style>
   </head>
   <body>
@@ -22,47 +15,34 @@
       import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/controls/OrbitControls.js';
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0000ff); // 파란 배경
+      scene.background = new THREE.Color(0x0000ff);
 
-      const camera = new THREE.PerspectiveCamera(
-        60,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.set(0, 1.5, 4);
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.z = 5;
 
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      // 조명
-      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
-      scene.add(hemiLight);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
-      dirLight.position.set(5, 10, 7.5);
-      scene.add(dirLight);
-
-      // 컨트롤
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
 
-      // 모델 로드
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(1, 1, 1).normalize();
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
       const loader = new GLTFLoader();
       loader.load(
         'https://raw.githubusercontent.com/DODOS137/3Dmodels/main/models/Rx056.glb',
         function (gltf) {
           const model = gltf.scene;
-
-          model.scale.set(1.5, 1.5, 1.5);
-          model.position.set(0, 0, 0);
-          model.rotation.y = Math.PI;
-
+          model.scale.set(1, 1, 1);
           scene.add(model);
         },
         undefined,
         function (error) {
-          console.error('모델 로딩 중 오류 발생:', error);
+          console.error('GLB load error:', error);
         }
       );
 
