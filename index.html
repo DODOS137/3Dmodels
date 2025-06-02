@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Robot 3D Viewer</title>
+    <title>3D Robot Viewer</title>
     <style>
       body {
         margin: 0;
@@ -38,10 +38,12 @@
 
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
+      controls.target.set(0, 1.5, 0);
+      controls.update();
 
       const loader = new GLTFLoader();
       loader.load(
-        './Rx056.glb',
+        'https://dodos137.github.io/3Dmodels/Rx056.glb', // ✔️ 경로 수정됨
         function (gltf) {
           const model = gltf.scene;
           model.scale.set(1.5, 1.5, 1.5);
@@ -49,7 +51,7 @@
         },
         undefined,
         function (error) {
-          console.error('An error occurred loading the model:', error);
+          console.error('An error happened while loading the model.', error);
         }
       );
 
@@ -69,6 +71,3 @@
     </script>
   </body>
 </html>
-
-
-
