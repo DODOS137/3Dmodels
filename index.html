@@ -2,14 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Test Background</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Robot Viewer</title>
     <style>
       body {
-        background-color: #0000ff;
         margin: 0;
-        height: 100vh;
+        background: #0000ff; /* 파란 배경 */
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
       }
     </style>
   </head>
-  <body></body>
+  <body>
+    <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
+      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/loaders/GLTFLoader.js';
+      import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/controls/OrbitControls.js';
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0000ff); // 파란 배경
+
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 1.5, 4);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // 조명
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+      scene.add(hemiLight);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+      dirLight.position.set(5, 10, 7.5);
+      scene.add(dirLight);
+
+      // 컨트롤
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      // 모델 로드
+      const loader = new GLTFLoader();
+      loader.load(
+        'https://raw.githubusercontent.com/DODOS137/3Dmodels/main/models/Rx056.glb',
+        function (gltf) {
+          const model = gltf.scene;
+
+          model.scale.set(1.5, 1.5, 1.5);
+          model.position.set(0, 0, 0);
+          model.rotation.y = Math.PI;
+
+          scene.add(model);
+        },
+        undefined,
+        function (error) {
+          console.error('모델 로딩 중 오류 발생:', error);
+        }
+      );
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    </script>
+  </body>
 </html>
