@@ -36,19 +36,36 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(5, 10, 7.5);
-      scene.add(light);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+      // Lighting
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+      scene.add(hemiLight);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+      dirLight.position.set(5, 10, 7.5);
+      scene.add(dirLight);
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambLight);
 
+      // Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
 
+      // Load Model
       const loader = new GLTFLoader();
       loader.load(
-        'https://dodos137.github.io/3Dmodels./models/Rx056.glb',
+        'https://dodos137.github.io/3Dmodels/models/Rx056.glb',
         function (gltf) {
           const model = gltf.scene;
+
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.material = new THREE.MeshStandardMaterial({
+                color: 0xcccccc,
+                metalness: 0.2,
+                roughness: 0.7
+              });
+            }
+          });
+
           model.scale.set(1.5, 1.5, 1.5);
           model.position.set(0, 0, 0);
           model.rotation.y = Math.PI;
@@ -76,3 +93,4 @@
     </script>
   </body>
 </html>
+
